@@ -24,9 +24,9 @@ function updateRecord (records) {
 			hasChild: true,
 		});
 		var titleLabel = Ti.UI.createLabel({
-			width: 50,
+			width: 150,
 			height: 'auto',
-			left: 5,
+			left: 60,
 			top: 5,
 			fontSize: 8,
 			fontWeight: 'bold',
@@ -36,18 +36,18 @@ function updateRecord (records) {
 		);
 		titleLabel.text = record.title;
 		row.add(titleLabel);
-		var titleUnit = Ti.UI.createLabel({
+		var timeSelectLabel = Ti.UI.createLabel({
 			width: 50,
 			height: 'auto',
-			left: 60,
+			left: 5,
 			top: -titleLabel.height,
 			fontSize: 8,
 			fontWeight: 'bold',
-			text: 'Kg',
 			color: '#2b4771'
 		}
 		);
-		row.add(titleUnit);
+		timeSelectLabel.text = record.time_select;
+		row.add(timeSelectLabel);
 		var dateLabel = Ti.UI.createLabel({
 			width: 290,
 			height: 'auto',

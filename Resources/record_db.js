@@ -17,6 +17,7 @@ var RecordDB = function() {
 			for (i =0; rows.isValidRow(); i++) {
 				var record = {};
 				record.id = rows.fieldByName('id');
+				record.time_select = rows.fieldByName('time_select');
 				record.title = rows.fieldByName('title');
 				var time = rows.fieldByName('at', Titanium.Database.FIELD_TYPE_DOUBLE)
 				record.at = new Date();
@@ -41,7 +42,8 @@ var RecordDB = function() {
 		this.open();
 		Ti.API.debug('update at.getTime():' + record.at.getTime());
 		var res = this.db.execute(
-		'UPDATE records SET title=?, at=? WHERE id=?',
+		'UPDATE records SET time_select=?, title=?, at=? WHERE id=?',
+		record.time_select,
 		record.title,
 		record.at.getTime(),
 		record.id
@@ -54,7 +56,8 @@ var RecordDB = function() {
 		this.open();
 		Ti.API.debug('insert at.getTime():' + record.at.getTime());
 		var res = this.db.execute(
-		'INSERT INTO records (title, at) VALUES(?,?)',
+		'INSERT INTO records (time_select, title, at) VALUES(?,?,?)',
+		record.time_select,
 		record.title,
 		record.at.getTime()
 		);
@@ -72,6 +75,6 @@ var RecordDB = function() {
 	// テーブル作成
 	this.open();
 	this.db.execute('DROP TABLE records');
-	this.db.execute('CREATE TABLE IF NOT EXISTS records (id INTEGER PRIMARY KEY, title TEXT, at real)');
+	this.db.execute('CREATE TABLE IF NOT EXISTS records (id INTEGER PRIMARY KEY, time_select INTEGER, title TEXT, at real)');
 	this.close();
 };
