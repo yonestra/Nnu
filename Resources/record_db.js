@@ -72,9 +72,19 @@ var RecordDB = function() {
 		this.close();
 		return res;
 	};
+	this.findOne = function(id) {
+		this.open();
+		var row = this.db.execute( 'SELECT * FROM records WHERE id=?',
+			id
+		 );
+		var res = this.setRows(row)[0];
+		row.close();
+		this.close();
+		return res;
+	};
 	// テーブル作成
 	this.open();
-	this.db.execute('DROP TABLE records');
+	// this.db.execute('DROP TABLE records');
 	this.db.execute('CREATE TABLE IF NOT EXISTS records (id INTEGER PRIMARY KEY, time_select INTEGER, title TEXT, at real)');
 	this.close();
 };
