@@ -24,7 +24,7 @@ function updateRecord (records) {
 			hasChild: true,
 		});
 		var titleLabel = Ti.UI.createLabel({
-			width: 150,
+			width: 100,
 			height: 'auto',
 			left: 60,
 			top: 5,
@@ -43,10 +43,26 @@ function updateRecord (records) {
 			top: -titleLabel.height,
 			fontSize: 8,
 			fontWeight: 'bold',
-			color: '#2b4771'
 		}
 		);
-		timeSelectLabel.text = record.time_select;
+		switch(record.time_select){
+			case 0:
+				timeSelectLabel.text = "朝食";
+				timeSelectLabel.color = "red"; 
+				break;
+			case 1:
+				timeSelectLabel.text = "昼食";
+				timeSelectLabel.color = "blue"; 
+				break;
+			case 2:
+				timeSelectLabel.text = "夕食";
+				timeSelectLabel.color = "green"; 
+				break;
+			case 3:
+				timeSelectLabel.text = "間食";
+				timeSelectLabel.color = "pink"; 
+				break;
+		}
 		row.add(timeSelectLabel);
 		var dateLabel = Ti.UI.createLabel({
 			width: 290,
