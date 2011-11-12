@@ -22,53 +22,32 @@ var listview = Titanium.UI.createView({
     // layout: "vertical"
 });
 listview.add(tableView);
-// var listlabel = Titanium.UI.createLabel({
-	// text:"list",
-	// color:'#999',
-	// font:{fontSIze:20}
-// });
-// listview.add(listlabel);
 
+var webview = Ti.UI.createWebView({
+	backgroundColor:"#fff"
+});
+webview.url = "graph.html";
 var graphview = Titanium.UI.createView({
     backgroundColor: "#ff0",
     // opacity: 1,
-    top: 10,
-    left: 10,
-    width: 300,
-    height: 400
+    top: 0,
+    left: 0,
+    width: 320
     // layout: "vertical"
 });
-var graphlabel = Titanium.UI.createLabel({
-	text:"graph",
-	color:'#999',
-	font:{fontSIze:20}
-});
-graphview.add(graphlabel);
+graphview.add(webview);
 graphview.hide();
 
 // NavBarに配置するインスタンス
 var tabbar = Titanium.UI.createTabbedBar({
+	width:200,
+	backgroundColor:'#orange',
     labels: ['List', 'Graph'],
     style: Titanium.UI.iPhone.SystemButtonStyle.BAR,
     index:0
 });
 // 現在のwindowから非表示→表示
 Titanium.UI.currentWindow.showNavBar();
-// Navbarの中央に配置
-Titanium.UI.currentWindow.setTitleControl(tabbar);
-tabbar.addEventListener('click', function(e)
-{
-	if (this.index == 0)
-	{
-		listview.show();
-		graphview.hide();
-	}
-	else if (this.index == 1)
-	{
-		listview.hide();
-		graphview.show();
-	}
-});
 
 win.add(listview);
 win.add(graphview);
@@ -177,6 +156,8 @@ addButton.addEventListener(
 		url: 'record_window.js',
 		record:{title:'', at: new Date()},
 		func: 'insert_row',
+		title:'Record',
+    	barColor:'#orange',
 		backgroundColor:'#fff'
 	});
 	Ti.UI.currentTab.open(recordWindow);
@@ -203,9 +184,10 @@ tableView.addEventListener(
 		url: 'record_window.js',
 		record: record,
 		func: 'update_row',
+		title:'Record',
+    	barColor:'#orange',
 		backgroundColor:'#fff'
-	}
-	);
+	});
 	Ti.UI.currentTab.open(recordWindow);
 });
 
@@ -219,3 +201,19 @@ function updateCallback(record) {
 	records = db.findAll();
 	updateRecord(records);
 }
+
+// Navbarの中央に配置
+Titanium.UI.currentWindow.setTitleControl(tabbar);
+tabbar.addEventListener('click', function(e)
+{
+	if (this.index == 0)
+	{
+		listview.show();
+		graphview.hide();
+	}
+	else if (this.index == 1)
+	{
+		listview.hide();
+		graphview.show();
+	}
+});
