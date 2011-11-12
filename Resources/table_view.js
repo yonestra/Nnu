@@ -17,7 +17,7 @@ function updateRecord (records) {
 	var data = currentData = [];
 	for (var i=0;i<records.length;i++) {
 		var record = records[i];
-		Ti.API.info("id:" + record.id);
+		Ti.API.info("meet_val:" + record.meet_val);
 		var row = Ti.UI.createTableViewRow({
 			height: 'auto',
 			layout: 'vertical',
@@ -30,17 +30,32 @@ function updateRecord (records) {
 			top: 5,
 			fontSize: 8,
 			fontWeight: 'bold',
-			textAlign: 'right',
+			textAlign: 'left',
 			color: '#2b4771'
 		}
 		);
 		titleLabel.text = record.title;
 		row.add(titleLabel);
+		var meetLabel = Ti.UI.createLabel({
+			width: 100,
+			height: 'auto',
+			left: 160,
+			top: -titleLabel.height,
+			fontSize: 8,
+			fontWeight: 'bold',
+			textAlign: 'left',
+			color: '#2b4771'
+		}
+		);
+		if(record.meet_val != null){
+			meetLabel.text = "meet:"+record.meet_val;
+		}
+		row.add(meetLabel);
 		var timeSelectLabel = Ti.UI.createLabel({
 			width: 50,
 			height: 'auto',
 			left: 5,
-			top: -titleLabel.height,
+			top: -meetLabel.height,
 			fontSize: 8,
 			fontWeight: 'bold',
 		}

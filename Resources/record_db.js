@@ -19,7 +19,8 @@ var RecordDB = function() {
 				record.id = rows.fieldByName('id');
 				record.time_select = rows.fieldByName('time_select');
 				record.title = rows.fieldByName('title');
-				var time = rows.fieldByName('at', Titanium.Database.FIELD_TYPE_DOUBLE)
+				record.meet_val = rows.fieldByName('meet_val');
+				var time = rows.fieldByName('at', Titanium.Database.FIELD_TYPE_DOUBLE);
 				record.at = new Date();
 				record.at.setTime(time);
 				res.push(record);
@@ -42,9 +43,10 @@ var RecordDB = function() {
 		this.open();
 		Ti.API.debug('update at.getTime():' + record.at.getTime());
 		var res = this.db.execute(
-		'UPDATE records SET time_select=?, title=?, at=? WHERE id=?',
+		'UPDATE records SET time_select=?, title=?, meet_val=?, at=? WHERE id=?',
 		record.time_select,
 		record.title,
+		record.meet_val,
 		record.at.getTime(),
 		record.id
 		);
@@ -56,9 +58,10 @@ var RecordDB = function() {
 		this.open();
 		Ti.API.debug('insert at.getTime():' + record.at.getTime());
 		var res = this.db.execute(
-		'INSERT INTO records (time_select, title, at) VALUES(?,?,?)',
+		'INSERT INTO records (time_select, title, meet_val, at) VALUES(?,?,?,?)',
 		record.time_select,
 		record.title,
+		record.meet_val,
 		record.at.getTime()
 		);
 		Ti.API.debug('Insert into DB');
@@ -85,6 +88,6 @@ var RecordDB = function() {
 	// テーブル作成
 	this.open();
 	// this.db.execute('DROP TABLE records');
-	this.db.execute('CREATE TABLE IF NOT EXISTS records (id INTEGER PRIMARY KEY, time_select INTEGER, title TEXT, at real)');
+	this.db.execute('CREATE TABLE IF NOT EXISTS records (id INTEGER PRIMARY KEY, time_select INTEGER, title TEXT, meet_val INTEGER, at real)');
 	this.close();
 };

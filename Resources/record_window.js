@@ -5,6 +5,11 @@ var dateField = Ti.UI.createTextField({
 	top:20, left:50, right:50, height:40,
 	borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED
 });
+// dateField.addEventListener('change',function(e)
+// {
+	// dateField.text = e.value;
+	// // Titanium.API.info("dateField.text:"+dateField.text);
+// });
 win.add(dateField);
 
 var timeSelectButton = Titanium.UI.createTabbedBar({
@@ -13,6 +18,10 @@ var timeSelectButton = Titanium.UI.createTabbedBar({
 	top:80, left:50, right:50, height:40,
 	style: Titanium.UI.iPhone.SystemButtonStyle.BAR
 });
+// timeSelectButton.addEventListener('change',function(e)
+// {
+	// timeSelectButton.index = e.index;
+// });
 win.add(timeSelectButton);
 
 var titleField = Ti.UI.createTextField({
@@ -20,6 +29,10 @@ var titleField = Ti.UI.createTextField({
 	top:140, left:50, right:50, height:40,
 	borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED
 });
+// titleField.addEventListener('change',function(e)
+// {
+	// titleField.text = e.value;
+// });
 win.add(titleField);
 
 //
@@ -60,16 +73,18 @@ win.add(basicSlider);
 
 var saveButton = Ti.UI.createButton({
 	title: 'この値で保存する',
-	top:260, left:50, right:50, height:40
+	top:280, left:50, right:50, height:40
 });
 win.add(saveButton);
 
 saveButton.addEventListener(
 'click', function () {
 	var record = {};
+	Titanium.API.info("basicSlider.value:"+Math.round(basicSlider.value));
 	// record.index = win.record.index;
 	record.time_select = timeSelectButton.index;
 	record.title = titleField.value;
+	record.meet_val = Math.round(basicSlider.value);
 	record.at = new Date(dateField.value);
 	record.at.setHours(12); //日付がなぜかズレるのを防止
 	Ti.App.fireEvent(win.func, record);
