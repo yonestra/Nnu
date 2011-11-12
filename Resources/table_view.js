@@ -11,7 +11,67 @@ var tableView = Ti.UI.createTableView({
 	data:data,
 	editable: true
 });
-win.add(tableView);
+// win.add(tableView);
+var listview = Titanium.UI.createView({
+    backgroundColor: "#f00",
+    // opacity: 1,
+    top: 10,
+    left: 10,
+    width: 300,
+    height: 400
+    // layout: "vertical"
+});
+listview.add(tableView);
+// var listlabel = Titanium.UI.createLabel({
+	// text:"list",
+	// color:'#999',
+	// font:{fontSIze:20}
+// });
+// listview.add(listlabel);
+
+var graphview = Titanium.UI.createView({
+    backgroundColor: "#ff0",
+    // opacity: 1,
+    top: 10,
+    left: 10,
+    width: 300,
+    height: 400
+    // layout: "vertical"
+});
+var graphlabel = Titanium.UI.createLabel({
+	text:"graph",
+	color:'#999',
+	font:{fontSIze:20}
+});
+graphview.add(graphlabel);
+graphview.hide();
+
+// NavBarに配置するインスタンス
+var tabbar = Titanium.UI.createTabbedBar({
+    labels: ['List', 'Graph'],
+    style: Titanium.UI.iPhone.SystemButtonStyle.BAR,
+    index:0
+});
+// 現在のwindowから非表示→表示
+Titanium.UI.currentWindow.showNavBar();
+// Navbarの中央に配置
+Titanium.UI.currentWindow.setTitleControl(tabbar);
+tabbar.addEventListener('click', function(e)
+{
+	if (this.index == 0)
+	{
+		listview.show();
+		graphview.hide();
+	}
+	else if (this.index == 1)
+	{
+		listview.hide();
+		graphview.show();
+	}
+});
+
+win.add(listview);
+win.add(graphview);
 
 function updateRecord (records) {
 	var data = currentData = [];
