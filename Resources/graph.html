@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	<meta name="viewport" content="width=320, ">
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" href="./lib/jqplot/jquery.jqplot.min.css" />
+	<!--[if IE]><script language="javascript" type="text/javascript" src="http://localhost/work/dist/excanvas.min.js"></script><![endif]-->
+	<script language="javascript" type="text/javascript" src="./lib/jqplot/jquery.min.js"></script>
+	<script language="javascript" type="text/javascript" src="./lib/jqplot/jquery.jqplot.min.js"></script>
+	<script language="javascript" type="text/javascript" src="./lib/jqplot/plugins/jqplot.barRenderer.min.js"></script>
+    <script language="javascript" type="text/javascript" src="./lib/jqplot/plugins/jqplot.categoryAxisRenderer.min.js"></script>
+    <script language="javascript" type="text/javascript" src="./lib/jqplot/plugins/jqplot.cursor.min.js"></script>
+</head>
+<body>
+    <p style="font-size : 16pt; padding : 10px 5px; text-align : center; color : black;">食事推移</p>
+    <div id="jq" style="width : 300px; height : 240px;"></div>
+    <script type="text/javascript">
+    $(document).ready(function() {
+    	// Ti.App.fireEvent('load',function(data){
+			
+    		// alert("test");
+    		// alert(data.kcalArray);
+    		
+    		var data = [ 1000, 1200, 2800, 2100, 3500 ];
+    	
+    		// $.jqplot('jq', [ data.kcalArray ], {
+    		$.jqplot('jq', [ data ], {
+	            legend: {
+	                // 凡例を北東（右上）に表示
+	                show: true,
+	                location: 'ne'
+	            },
+	            series: [
+	                {
+	                    // 系列1を1番目の縦軸に棒グラフで表示
+	                    yaxis: 'yaxis',
+	                    label: 'Meat',
+	                    renderer: $.jqplot.BarRenderer
+	                }
+	            ],
+	            axes: {
+	                xaxis: {
+	                    // tick_dataの値を横軸のラベルに表示
+	                    ticks: data.dateArray,
+	                    renderer: $.jqplot.CategoryAxisRenderer
+	
+	                },
+	                yaxis: {
+	                    // 縦軸1の目盛を0～100の20刻みにする
+	                    min: 0,
+	                    max: 5000,
+	                    tickInterval: 1000,
+	                    numberTicks: 6
+	                },
+	                y2axis: {
+	                    // 縦軸2の目盛を0～10の2刻みにする
+	                    min: 0,
+	                    max: 10,
+	                    tickInterval: 2,
+	                    numberTicks: 6
+	                }
+	            },
+	            cursor: {
+	                // カーソル位置を北西（左上）に表示
+	                tooltipLocation: 'nw'
+	            }
+	        });
+    	// });
+    });
+    </script>
+</body>
+</html>
