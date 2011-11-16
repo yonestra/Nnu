@@ -13,58 +13,108 @@
 </head>
 <body>
     <p style="font-size : 16pt; padding : 10px 5px; text-align : center; color : black;">食事推移</p>
-    <div id="jq" style="width : 300px; height : 240px;"></div>
+    <div id="jq" style="width : 300px; height : 500px;"></div>
+    <!--div id="jq" style="width : 300px; height : 240px;"></div-->
     <script type="text/javascript">
     $(document).ready(function() {
+    	
+  var s1 = [2, 6, 7, 10, 2, 6, 7, 10];
+  var s2 = [7, 5, 3, 4, 7, 5, 3, 4];
+  var s3 = [14, 9, 3, 8, 14, 9, 3, 8];
+  plot3 = $.jqplot('jq', [s1, s2, s3], {
+    // Tell the plot to stack the bars.
+    stackSeries: true,
+    captureRightClick: true,
+    seriesDefaults:{
+      renderer:$.jqplot.BarRenderer,
+      rendererOptions: {
+          // Put a 30 pixel margin between bars.
+          barMargin: 30,
+          barDirection: 'horizontal',
+          // Highlight bars when mouse button pressed.
+          // Disables default highlighting on mouse over.
+          highlightMouseDown: true   
+      },
+      pointLabels: {show: true}
+    },
+    axes: {
+      xaxis: {
+       	padMin: 0
+          // renderer: $.jqplot.CategoryAxisRenderer
+      },
+      yaxis: {
+        // Don't pad out the bottom of the data range.  By default,
+        // axes scaled as if data extended 10% above and below the
+        // actual range to prevent data points right on grid boundaries.
+        // Don't want to do that here.
+        renderer: $.jqplot.CategoryAxisRenderer
+        // padMin: 0
+      }
+    },
+    legend: {
+      show: true,
+      location: 'ne'
+      // placement: 'nw'
+    }      
+  });
+  // Bind a listener to the "jqplotDataClick" event.  Here, simply change
+  // the text of the info3 element to show what series and ponit were
+  // clicked along with the data for that point.
+  $('#chart3').bind('jqplotDataClick', 
+    function (ev, seriesIndex, pointIndex, data) {
+      $('#info3').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);
+    }
+  ); 
+    	
     	// Ti.App.fireEvent('load',function(data){
 			
     		// alert("test");
     		// alert(data.kcalArray);
     		
-    		var data = [ 1000, 1200, 2800, 2100, 3500 ];
-    	
-    		// $.jqplot('jq', [ data.kcalArray ], {
-    		$.jqplot('jq', [ data ], {
-	            legend: {
-	                // 凡例を北東（右上）に表示
-	                show: true,
-	                location: 'ne'
-	            },
-	            series: [
-	                {
-	                    // 系列1を1番目の縦軸に棒グラフで表示
-	                    yaxis: 'yaxis',
-	                    label: 'Meat',
-	                    renderer: $.jqplot.BarRenderer
-	                }
-	            ],
-	            axes: {
-	                xaxis: {
-	                    // tick_dataの値を横軸のラベルに表示
-	                    ticks: data.dateArray,
-	                    renderer: $.jqplot.CategoryAxisRenderer
-	
-	                },
-	                yaxis: {
-	                    // 縦軸1の目盛を0～100の20刻みにする
-	                    min: 0,
-	                    max: 5000,
-	                    tickInterval: 1000,
-	                    numberTicks: 6
-	                },
-	                y2axis: {
-	                    // 縦軸2の目盛を0～10の2刻みにする
-	                    min: 0,
-	                    max: 10,
-	                    tickInterval: 2,
-	                    numberTicks: 6
-	                }
-	            },
-	            cursor: {
-	                // カーソル位置を北西（左上）に表示
-	                tooltipLocation: 'nw'
-	            }
-	        });
+    		// var data = [ 1000, 1200, 2800, 2100, 3500 ];
+//     	
+    		// // $.jqplot('jq', [ data.kcalArray ], {
+    		// $.jqplot('jq', [ data ], {
+	            // legend: {
+	                // // 凡例を北東（右上）に表示
+	                // show: true,
+	                // location: 'ne'
+	            // },
+	            // series: [
+	                // {
+	                    // // 系列1を1番目の縦軸に棒グラフで表示
+	                    // yaxis: 'yaxis',
+	                    // label: 'Meat',
+	                    // renderer: $.jqplot.BarRenderer
+	                // }
+	            // ],
+	            // axes: {
+	                // xaxis: {
+	                    // // tick_dataの値を横軸のラベルに表示
+	                    // ticks: data.dateArray,
+	                    // renderer: $.jqplot.CategoryAxisRenderer
+// 	
+	                // },
+	                // yaxis: {
+	                    // // 縦軸1の目盛を0～100の20刻みにする
+	                    // min: 0,
+	                    // max: 5000,
+	                    // tickInterval: 1000,
+	                    // numberTicks: 6
+	                // },
+	                // y2axis: {
+	                    // // 縦軸2の目盛を0～10の2刻みにする
+	                    // min: 0,
+	                    // max: 10,
+	                    // tickInterval: 2,
+	                    // numberTicks: 6
+	                // }
+	            // },
+	            // cursor: {
+	                // // カーソル位置を北西（左上）に表示
+	                // tooltipLocation: 'nw'
+	            // }
+	        // });
     	// });
     });
     </script>

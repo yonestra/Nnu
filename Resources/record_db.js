@@ -17,9 +17,9 @@ var RecordDB = function() {
 			for (i =0; rows.isValidRow(); i++) {
 				var record = {};
 				record.id = rows.fieldByName('id');
-				record.time_select = rows.fieldByName('time_select');
-				record.title = rows.fieldByName('title');
-				record.meet_val = rows.fieldByName('meet_val');
+				record.meat_val = rows.fieldByName('meat_val');
+				record.vegetable_val = rows.fieldByName('vegetable_val');
+				record.carb_val = rows.fieldByName('carb_val');
 				var time = rows.fieldByName('at', Titanium.Database.FIELD_TYPE_DOUBLE);
 				record.at = new Date();
 				record.at.setTime(time);
@@ -43,10 +43,10 @@ var RecordDB = function() {
 		this.open();
 		Ti.API.debug('update at.getTime():' + record.at.getTime());
 		var res = this.db.execute(
-		'UPDATE records SET time_select=?, title=?, meet_val=?, at=? WHERE id=?',
-		record.time_select,
-		record.title,
-		record.meet_val,
+		'UPDATE records SET meat_val=?, vegetable_val=?, carb_val=?, at=? WHERE id=?',
+		record.meat_val,
+		record.vegetable_val,
+		record.carb_val,
 		record.at.getTime(),
 		record.id
 		);
@@ -58,10 +58,10 @@ var RecordDB = function() {
 		this.open();
 		Ti.API.debug('insert at.getTime():' + record.at.getTime());
 		var res = this.db.execute(
-		'INSERT INTO records (time_select, title, meet_val, at) VALUES(?,?,?,?)',
-		record.time_select,
-		record.title,
-		record.meet_val,
+		'INSERT INTO records (meat_val, vegetable_val, carb_val, at) VALUES(?,?,?,?)',
+		record.meat_val,
+		record.vegetable_val,
+		record.carb_val,
 		record.at.getTime()
 		);
 		Ti.API.debug('Insert into DB');
@@ -87,7 +87,7 @@ var RecordDB = function() {
 	};
 	// テーブル作成
 	this.open();
-	// this.db.execute('DROP TABLE records');
-	this.db.execute('CREATE TABLE IF NOT EXISTS records (id INTEGER PRIMARY KEY, time_select INTEGER, title TEXT, meet_val INTEGER, at real)');
+	this.db.execute('DROP TABLE records');
+	this.db.execute('CREATE TABLE IF NOT EXISTS records (id INTEGER PRIMARY KEY, meat_val INTEGER, vegetable_val INTEGER, carb_val INTEGER, at real)');
 	this.close();
 };

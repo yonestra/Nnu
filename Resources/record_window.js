@@ -1,77 +1,87 @@
 var win = Ti.UI.currentWindow;
 
-var dateField = Ti.UI.createTextField({
-	hintText: '日付を入力してください',
-	top:20, left:50, right:50, height:40,
-	borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED
-});
-// dateField.addEventListener('change',function(e)
-// {
-	// dateField.text = e.value;
-	// // Titanium.API.info("dateField.text:"+dateField.text);
-// });
-win.add(dateField);
-
-var timeSelectButton = Titanium.UI.createTabbedBar({
-	labels: ["朝食", "昼食", "夕食", "間食"],
-	index: 0,
-	top:80, left:50, right:50, height:40,
-	backgroundColor:'#orange',
-	style: Titanium.UI.iPhone.SystemButtonStyle.BAR
-});
-// timeSelectButton.addEventListener('change',function(e)
-// {
-	// timeSelectButton.index = e.index;
-// });
-win.add(timeSelectButton);
-
-var titleField = Ti.UI.createTextField({
-	hintText: '食事内容を入力してください',
-	top:140, left:50, right:50, height:40,
-	borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED
-});
-// titleField.addEventListener('change',function(e)
-// {
-	// titleField.text = e.value;
-// });
-win.add(titleField);
-
 //
-// BASIC SLIDER
+// meat SLIDER
 //
-var basicSliderLabel = Titanium.UI.createLabel({
-	text:'Meet value = 0' ,
+var meatSliderLabel = Titanium.UI.createLabel({
+	text:'meat value = 0' ,
 	color:'#orange',
 	font:{
 		fontFamily:'Helvetica Neue',
 		fontSize:15
 	},
 	textAlign:'center',
-	top:200, left:50, right:50, height:'auto'
+	top:30, left:50, right:50, height:'auto'
 });
-
-var basicSlider = Titanium.UI.createSlider({
+var meatSlider = Titanium.UI.createSlider({
 	backgroundDisabledColor:'#orange',
 	min:0,
 	max:10,
-	top:230, left:50, right:50, height:'auto'
+	top:60, left:50, right:50, height:'auto'
 });
-basicSlider.addEventListener('change',function(e)
+meatSlider.addEventListener('change',function(e)
 {
-	basicSliderLabel.text = 'Meet value = ' + Math.round(e.value);
+	meatSliderLabel.text = 'meat value = ' + Math.round(e.value);
 });
-// For #806
-basicSlider.addEventListener('touchstart', function(e)
+meatSlider.value = 0; // For regression test purposes
+win.add(meatSliderLabel);
+win.add(meatSlider);
+
+//
+// vegetable SLIDER
+//
+var vegetableSliderLabel = Titanium.UI.createLabel({
+	text:'vegetable value = 0' ,
+	color:'#orange',
+	font:{
+		fontFamily:'Helvetica Neue',
+		fontSize:15
+	},
+	textAlign:'center',
+	top:90, left:50, right:50, height:'auto'
+});
+
+var vegetableSlider = Titanium.UI.createSlider({
+	backgroundDisabledColor:'#orange',
+	min:0,
+	max:10,
+	top:120, left:50, right:50, height:'auto'
+});
+vegetableSlider.addEventListener('change',function(e)
 {
-	Ti.API.info('Touch started: '+e.value);
+	vegetableSliderLabel.text = 'vegetable value = ' + Math.round(e.value);
 });
-basicSlider.addEventListener('touchend', function(e)
+vegetableSlider.value = 0; // For regression test purposes
+win.add(vegetableSliderLabel);
+win.add(vegetableSlider);
+
+//
+// carb SLIDER
+//
+var carbSliderLabel = Titanium.UI.createLabel({
+	text:'carb value = 0' ,
+	color:'#orange',
+	font:{
+		fontFamily:'Helvetica Neue',
+		fontSize:15
+	},
+	textAlign:'center',
+	top:150, left:50, right:50, height:'auto'
+});
+
+var carbSlider = Titanium.UI.createSlider({
+	backgroundDisabledColor:'#orange',
+	min:0,
+	max:10,
+	top:180, left:50, right:50, height:'auto'
+});
+carbSlider.addEventListener('change',function(e)
 {
-	Ti.API.info('Touch ended: '+e.value);
+	carbSliderLabel.text = 'carb value = ' + Math.round(e.value);
 });
-basicSlider.value = 0; // For regression test purposes
-win.add(basicSliderLabel);
-win.add(basicSlider);
+carbSlider.value = 0; // For regression test purposes
+win.add(carbSliderLabel);
+win.add(carbSlider);
 
 var saveButton = Ti.UI.createButton({
 	// backgroundColor:'#orange',
@@ -86,24 +96,53 @@ var saveButton = Ti.UI.createButton({
        ],
        startRadius:{x:0,y:0},
        endRadius:{x:50,y:50}
-   },
+   	},
+   	borderRadius:10,
 	backgroundImage:'none',
 	color:"#white",
 	title: 'この値で保存する',
-	top:280, left:50, right:50, height:40
+	top:220, left:50, right:50, height:40
 });
 win.add(saveButton);
 
+// saveButton.addEventListener('singletap',function(){
+	// this.backgroundColor = "#blue";
+// });
+
 saveButton.addEventListener(
 'click', function () {
+	this.backgroundGradient = {
+    	type:'linear',
+    	colors:[
+	        {position:0.00,color:'#white'},
+	        {position:0.50,color:'#blue'},
+	        {position:0.51,color:'#blue'},
+	        {position:1.00,color:'#white'}
+	    ],
+	    startRadius:{x:0,y:0},
+	    endRadius:{x:50,y:50}
+   	}
+   	
+   	this.backgroundGradient = {
+    	type:'linear',
+    	colors:[
+        	{position:0.00,color:'#feccb1'},
+        	{position:0.50,color:'#f17432'},
+        	{position:0.51,color:'#ea5507'},
+        	{position:1.00,color:'#fb955e'}
+        ],
+        startRadius:{x:0,y:0},
+        endRadius:{x:50,y:50}
+   	}
+	
 	var record = {};
 	// record.index = win.record.index;
-	record.time_select = timeSelectButton.index;
-	record.title = titleField.value;
-	record.meet_val = Math.round(basicSlider.value);
-	record.at = new Date(dateField.value);
-	record.at.setHours(12); //日付がなぜかズレるのを防止
-	Ti.App.fireEvent(win.func, record);
+	record.meat_val = Math.round(meatSlider.value);
+	record.vegetable_val = Math.round(vegetableSlider.value);
+	record.carb_val = Math.round(carbSlider.value);
+	// record.at = new Date(dateField.value);
+	// record.at.setHours(12); //日付がなぜかズレるのを防止c, record);
+	
 	win.close();
 });
 
@@ -116,3 +155,19 @@ saveButton.addEventListener(
 	// titleField.value = record.title;
 	// dateField.value = record.at.toString();
 // }
+
+Ti.include('scroll_days_view.js');
+
+// var scrollDays = new ScrollDays();
+// scrollDays.scrollView.scrollTo(100, 0);
+
+// win.add(scrollDays.leftImage);
+// win.add(scrollDays.rightImage);
+win.add(scrollView);
+win.add(scrollValueLabel);
+win.add(allow);
+
+// win.addEventListener('focus', function(){
+	// Titanium.API.info("window focus!");
+	// scrollView.scrollTo(1000,0);
+// });

@@ -56,14 +56,14 @@ function updateRecord (records) {
 	var data = currentData = [];
 	for (var i=0;i<records.length;i++) {
 		var record = records[i];
-		Ti.API.info("meet_val:" + record.meet_val);
+		Ti.API.info("meat_val:" + record.meat_val);
 		var row = Ti.UI.createTableViewRow({
 			height: 'auto',
 			layout: 'vertical',
 			hasChild: true,
 		});
-		var titleLabel = Ti.UI.createLabel({
-			width: 100,
+		var meatLabel = Ti.UI.createLabel({
+			width: 60,
 			height: 'auto',
 			left: 60,
 			top: 5,
@@ -73,12 +73,16 @@ function updateRecord (records) {
 			color: '#2b4771'
 		}
 		);
-		titleLabel.text = record.title;
-		row.add(titleLabel);
-		var meetLabel = Ti.UI.createLabel({
-			width: 100,
+		if(record.meat_val != null){
+			meatLabel.text = "肉：" + record.meat_val;
+		} else {
+			meatLabel.text = "肉：" + 0;
+		}
+		row.add(meatLabel);
+		var vegetableLabel = Ti.UI.createLabel({
+			width: 60,
 			height: 'auto',
-			left: 160,
+			left: 130,
 			top: -titleLabel.height,
 			fontSize: 8,
 			fontWeight: 'bold',
@@ -86,38 +90,29 @@ function updateRecord (records) {
 			color: '#2b4771'
 		}
 		);
-		if(record.meet_val != null){
-			meetLabel.text = "meet:"+record.meet_val;
+		if(record.vegetable_val != null){
+			vegetableLabel.text = "菜:"+record.vegetable_val;
+		} else {
+			vegetableLabel.text = "菜:"+0;
 		}
-		row.add(meetLabel);
-		var timeSelectLabel = Ti.UI.createLabel({
-			width: 50,
+		row.add(vegetableLabel);
+		var carbLabel = Ti.UI.createLabel({
+			width: 60,
 			height: 'auto',
-			left: 5,
-			top: -meetLabel.height,
+			left: 200,
+			top: -titleLabel.height,
 			fontSize: 8,
 			fontWeight: 'bold',
+			textAlign: 'left',
+			color: '#2b4771'
 		}
 		);
-		switch(record.time_select){
-			case 0:
-				timeSelectLabel.text = "朝食";
-				timeSelectLabel.color = "red"; 
-				break;
-			case 1:
-				timeSelectLabel.text = "昼食";
-				timeSelectLabel.color = "blue"; 
-				break;
-			case 2:
-				timeSelectLabel.text = "夕食";
-				timeSelectLabel.color = "green"; 
-				break;
-			case 3:
-				timeSelectLabel.text = "間食";
-				timeSelectLabel.color = "pink"; 
-				break;
+		if(record.carb_val != null){
+			carbLabel.text = "菜:"+record.carb_val;
+		} else {
+			carbLabel.text = "菜:"+0;
 		}
-		row.add(timeSelectLabel);
+		row.add(carbLabel);
 		var dateLabel = Ti.UI.createLabel({
 			width: 290,
 			height: 'auto',
@@ -154,7 +149,7 @@ addButton.addEventListener(
 'click', function () {
 	var recordWindow = Ti.UI.createWindow({
 		url: 'record_window.js',
-		record:{title:'', at: new Date()},
+		record:{at: new Date()},
 		func: 'insert_row',
 		title:'Record',
     	barColor:'#orange',
