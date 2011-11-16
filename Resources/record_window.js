@@ -1,5 +1,17 @@
 var win = Ti.UI.currentWindow;
 
+var monthLabel = Titanium.UI.createLabel({
+	color:'#black',
+	font:{
+		fontFamily:'Helvetica Neue',
+		fontSize:25
+	},
+	textAlign:'center',
+	top:5, left:5, height:'auto', width:'auto'
+});
+monthLabel.text = new Date().getMonth()+1 + "月";
+win.add(monthLabel);
+
 //
 // meat SLIDER
 //
@@ -140,9 +152,9 @@ saveButton.addEventListener(
 	record.meat_val = Math.round(meatSlider.value);
 	record.vegetable_val = Math.round(vegetableSlider.value);
 	record.carb_val = Math.round(carbSlider.value);
-	// record.at = new Date(dateField.value);
-	// record.at.setHours(12); //日付がなぜかズレるのを防止c, record);
-	
+	record.at = new Date();
+	record.at.setHours(12); //日付がなぜかズレるのを防止c, record);
+	Ti.App.fireEvent(win.func, record);
 	win.close();
 });
 
