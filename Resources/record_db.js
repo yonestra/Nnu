@@ -12,14 +12,15 @@ var RecordDB = function() {
 	};
 	this.setRows = function (rows) {
 		var res = [];
+		// Ti.API.debug('rows.getRowCount():' + rows.getRowCount());
 		if ( rows.getRowCount() > 0 ) {
-			Ti.API.debug('Found: ' + rows.getRowCount() );
 			for (i =0; rows.isValidRow(); i++) {
 				var record = {};
 				record.id = rows.fieldByName('id');
 				record.meat_val = rows.fieldByName('meat_val');
 				record.vegetable_val = rows.fieldByName('vegetable_val');
 				record.carb_val = rows.fieldByName('carb_val');
+				record.y_m_d = rows.fieldByName('y_m_d');
 				var time = rows.fieldByName('at', Titanium.Database.FIELD_TYPE_DOUBLE);
 				record.at = new Date();
 				record.at.setTime(time);
@@ -41,12 +42,12 @@ var RecordDB = function() {
 	};
 	this.update = function(record) {
 		this.open();
-		Ti.API.debug('update at.getTime():' + record.at.getTime());
 		var res = this.db.execute(
-		'UPDATE records SET meat_val=?, vegetable_val=?, carb_val=?, at=? WHERE id=?',
+		'UPDATE records SET meat_val=?, vegetable_val=?, carb_val=?, y_m_d=?, at=? WHERE id=?',
 		record.meat_val,
 		record.vegetable_val,
 		record.carb_val,
+		record.y_m_d,
 		record.at.getTime(),
 		record.id
 		);
@@ -54,14 +55,28 @@ var RecordDB = function() {
 		this.close();
 		return true;
 	};
-	this.insert = function(record) {
+	this.updateByYMD = function(record) {
 		this.open();
-		Ti.API.debug('insert at.getTime():' + record.at.getTime());
 		var res = this.db.execute(
-		'INSERT INTO records (meat_val, vegetable_val, carb_val, at) VALUES(?,?,?,?)',
+		'UPDATE records SET meat_val=?, vegetable_val=?, carb_val=?, at=? WHERE y_m_d=?',
 		record.meat_val,
 		record.vegetable_val,
 		record.carb_val,
+		record.at.getTime(),
+		record.y_m_d
+		);
+		Ti.API.debug('Update DB by y_m_d');
+		this.close();
+		return true;
+	};
+	this.insert = function(record) {
+		this.open();
+		var res = this.db.execute(
+		'INSERT INTO records (meat_val, vegetable_val, carb_val, y_m_d, at) VALUES(?,?,?,?,?)',
+		record.meat_val,
+		record.vegetable_val,
+		record.carb_val,
+		record.y_m_d,
 		record.at.getTime()
 		);
 		Ti.API.debug('Insert into DB');
@@ -85,9 +100,19 @@ var RecordDB = function() {
 		this.close();
 		return res;
 	};
+	this.findOneByYMD = function(y_m_d) {
+		this.open();
+		var row = this.db.execute( 'SELECT * FROM records WHERE y_m_d=?',
+			y_m_d
+		 );
+		var res = this.setRows(row)[0];
+		row.close();
+		this.close();
+		return res;
+	};
 	// テーブル作成
 	this.open();
-	this.db.execute('DROP TABLE records');
-	this.db.execute('CREATE TABLE IF NOT EXISTS records (id INTEGER PRIMARY KEY, meat_val INTEGER, vegetable_val INTEGER, carb_val INTEGER, at real)');
+	// this.db.execute('DROP TABLE records');
+	this.db.execute('CREATE TABLE IF NOT EXISTS records (id INTEGER PRIMARY KEY, meat_val INTEGER, vegetable_val INTEGER, carb_val INTEGER, y_m_d TEXT, at real)');
 	this.close();
 };

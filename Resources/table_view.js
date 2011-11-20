@@ -11,7 +11,6 @@ var tableView = Ti.UI.createTableView({
 	data:data,
 	editable: true
 });
-// win.add(tableView);
 var listview = Titanium.UI.createView({
     backgroundColor: "#f00",
     // opacity: 1,
@@ -56,7 +55,7 @@ function updateRecord (records) {
 	var data = currentData = [];
 	for (var i=0;i<records.length;i++) {
 		var record = records[i];
-		Ti.API.info("meat_val:" + record.meat_val);
+		// Ti.API.info("meat_val:" + record.meat_val);
 		var row = Ti.UI.createTableViewRow({
 			height: 'auto',
 			layout: 'vertical',
@@ -113,7 +112,7 @@ function updateRecord (records) {
 			carbLabel.text = "菜:"+0;
 		}
 		row.add(carbLabel);
-		var dateLabel = Ti.UI.createLabel({
+		var ymdLabel = Ti.UI.createLabel({
 			width: 290,
 			height: 'auto',
 			left: 5,
@@ -122,8 +121,8 @@ function updateRecord (records) {
 			textAlign: 'right'
 		}
 		);
-		dateLabel.text = record.at.toDateString();
-		row.add(dateLabel);
+		ymdLabel.text = record.y_m_d;
+		row.add(ymdLabel);
 
 		currentData.push(row);
 	}
@@ -192,7 +191,8 @@ Ti.App.addEventListener('update_row', function(record) {
 });
 
 function updateCallback(record) {
-	db.update(record)
+	// db.update(record)
+	db.updateByYMD(record)
 	records = db.findAll();
 	updateRecord(records);
 }
