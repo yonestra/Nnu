@@ -3,7 +3,7 @@
 Ti.include('record_db.js');
 
 var db = new RecordDB();
-var records = db.findAll();
+// var records = db.findAll();
 
 var win = Ti.UI.currentWindow;
 var data = [];
@@ -121,14 +121,17 @@ function updateRecord (records) {
 			textAlign: 'right'
 		}
 		);
-		ymdLabel.text = record.y_m_d;
+		var Y = String(record.y_m_d).slice(0,3);
+		var M = String(record.y_m_d).slice(4,5);
+		var D = String(record.y_m_d).slice(6,7);
+		ymdLabel.text = Y+"/"+M+"/"+D;
 		row.add(ymdLabel);
 
 		currentData.push(row);
 	}
 	tableView.setData(currentData);
 }
-updateRecord(records);
+// updateRecord(records);
 
 function deleteCallback(index) {
 	db.deleteOne(records[index]);

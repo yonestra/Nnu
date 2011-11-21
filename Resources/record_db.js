@@ -21,9 +21,9 @@ var RecordDB = function() {
 				record.vegetable_val = rows.fieldByName('vegetable_val');
 				record.carb_val = rows.fieldByName('carb_val');
 				record.y_m_d = rows.fieldByName('y_m_d');
-				var time = rows.fieldByName('at', Titanium.Database.FIELD_TYPE_DOUBLE);
-				record.at = new Date();
-				record.at.setTime(time);
+				// var time = rows.fieldByName('created_at', Titanium.Database.FIELD_TYPE_DOUBLE);
+				// record.created_at = new Date();
+				// record.created_at.setTime(time);
 				res.push(record);
 				rows.next();
 			}
@@ -43,12 +43,12 @@ var RecordDB = function() {
 	this.update = function(record) {
 		this.open();
 		var res = this.db.execute(
-		'UPDATE records SET meat_val=?, vegetable_val=?, carb_val=?, y_m_d=?, at=? WHERE id=?',
+		'UPDATE records SET meat_val=?, vegetable_val=?, carb_val=?, y_m_d=?, updated_at=? WHERE id=?',
 		record.meat_val,
 		record.vegetable_val,
 		record.carb_val,
 		record.y_m_d,
-		record.at.getTime(),
+		record.updated_at.getTime(),
 		record.id
 		);
 		Ti.API.debug('Update DB');
@@ -58,11 +58,11 @@ var RecordDB = function() {
 	this.updateByYMD = function(record) {
 		this.open();
 		var res = this.db.execute(
-		'UPDATE records SET meat_val=?, vegetable_val=?, carb_val=?, at=? WHERE y_m_d=?',
+		'UPDATE records SET meat_val=?, vegetable_val=?, carb_val=?, updated_at=? WHERE y_m_d=?',
 		record.meat_val,
 		record.vegetable_val,
 		record.carb_val,
-		record.at.getTime(),
+		record.updated_at.getTime(),
 		record.y_m_d
 		);
 		Ti.API.debug('Update DB by y_m_d');
@@ -72,19 +72,22 @@ var RecordDB = function() {
 	this.insert = function(record) {
 		this.open();
 		var res = this.db.execute(
-		'INSERT INTO records (meat_val, vegetable_val, carb_val, y_m_d, at) VALUES(?,?,?,?,?)',
+		'INSERT INTO records (meat_val, vegetable_val, carb_val, y_m_d, created_at, updated_at) VALUES(?,?,?,?,?,?)',
 		record.meat_val,
 		record.vegetable_val,
 		record.carb_val,
 		record.y_m_d,
-		record.at.getTime()
+		record.created_at.getTime(),
+		record.updated_at.getTime()
 		);
+		// Titanium.API.info("record.meat_val:"+record.meat_val);
+		Titanium.API.info("record.y_m_d:"+record.y_m_d);
 		Ti.API.debug('Insert into DB');
 		this.close();
 	};
 	this.findAll = function() {
 		this.open();
-		var rows = this.db.execute( 'SELECT * FROM records ORDER BY at DESC' );
+		var rows = this.db.execute( 'SELECT * FROM records ORDER BY y_m_d DESC' );
 		var res = this.setRows(rows);
 		rows.close();
 		this.close();
@@ -113,6 +116,6 @@ var RecordDB = function() {
 	// テーブル作成
 	this.open();
 	// this.db.execute('DROP TABLE records');
-	this.db.execute('CREATE TABLE IF NOT EXISTS records (id INTEGER PRIMARY KEY, meat_val INTEGER, vegetable_val INTEGER, carb_val INTEGER, y_m_d TEXT, at real)');
+	this.db.execute('CREATE TABLE IF NOT EXISTS records (id INTEGER PRIMARY KEY, meat_val INTEGER, vegetable_val INTEGER, carb_val INTEGER, y_m_d INTEGER, created_at real, updated_at real)');
 	this.close();
 };

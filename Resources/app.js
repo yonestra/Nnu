@@ -23,21 +23,6 @@ var tab1 = Titanium.UI.createTab({
 //
 // create controls tab and root window
 //
-// var win2 = Titanium.UI.createWindow({  
-    // title:'Record',
-    // barColor:'#orange',
-    // backgroundColor:'#fff',
-    // url:"record_window.js"
-// });
-// var tab2 = Titanium.UI.createTab({  
-    // icon:'KS_nav_ui.png',
-    // title:'Record',
-    // window:win2
-// });
-
-//
-// create controls tab and root window
-//
 var win3 = Titanium.UI.createWindow({  
     title:'Setting',
     barColor:'#orange',
@@ -55,7 +40,6 @@ var tab3 = Titanium.UI.createTab({
 //  add tabs
 //
 tabGroup.addTab(tab1);  
-// tabGroup.addTab(tab2);
 tabGroup.addTab(tab3);
 
 

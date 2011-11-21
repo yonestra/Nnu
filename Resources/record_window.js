@@ -5,7 +5,9 @@ now.setHours(12);
 var Y = now.getYear()+1900;
 var M = now.getMonth()+1;
 var D = now.getDate();
-var y_m_d = Y+"-"+M+"-"+D;
+if(String(M).length == 1) M = "0"+M;
+if(String(D).length == 1) D = "0"+D;
+var y_m_d = parseInt(Y+""+M+""+D);
 var y_m_d_old = y_m_d;
 
 var monthLabel = Titanium.UI.createLabel({
@@ -161,8 +163,10 @@ saveButton.addEventListener(
 	record.vegetable_val = Math.round(vegetableSlider.value);
 	record.carb_val = Math.round(carbSlider.value);
 	record.y_m_d = y_m_d;
-	record.at = new Date();
-	record.at.setHours(12); //日付がなぜかズレるのを防止c, record);
+	record.created_at = new Date();
+	record.created_at.setHours(12); //日付がなぜかズレるのを防止c, record);
+	record.updated_at = new Date();
+	record.updated_at.setHours(12); //日付がなぜかズレるのを防止c, record);
 	Ti.App.fireEvent(win.func, record);
 	win.close();
 });
@@ -246,11 +250,7 @@ function getData(record){
 
 Ti.include('record_db.js');
 var db = new RecordDB();
-var s_date_old = computeDate(Y, M, D, ((pos_old+25)/50)-labelNum);
-old_Y = s_date_old.getYear()+1900
-old_M = s_date_old.getMonth()+1
-old_D = s_date_old.getDate();
-var record = db.findOneByYMD(old_Y+"-"+old_M+"-"+old_D);
+var record = db.findOneByYMD(y_m_d);
 getData(record);
 
 scrollView.addEventListener('scroll', function(e)
@@ -258,14 +258,18 @@ scrollView.addEventListener('scroll', function(e)
 	scrollValueLabel.text = e.x;
 	var pos = e.x;
 	
-	var s_date = computeDate(Y, M, D, ((pos+25)/50)-labelNum);
+	// var s_date = computeDate(Y, M, D, ((pos+25)/50)-labelNum);
+	var s_date = computeDate(Y, M, D, 1-((pos+25)/50));
 	var Y_ = s_date.getYear()+1900;
 	var M_ = s_date.getMonth()+1;
 	var D_ = s_date.getDate();
-	y_m_d = Y_+"-"+M_+"-"+D_;
+	if(String(M_).length == 1) M_ = "0"+M_;
+	if(String(D_).length == 1) D_ = "0"+D_;
+	y_m_d = parseInt(Y_+""+M_+""+D_);
 	
 	if(y_m_d != y_m_d_old){
 		var record = db.findOneByYMD(y_m_d);
+		Titanium.API.info("y_m_d:"+y_m_d);
 		getData(record);
 	}
 	y_m_d_old = y_m_d;
@@ -290,15 +294,15 @@ scrollView.addEventListener('scroll', function(e)
 	}
 });
 
-for(var i=labelNum+1; i>-4; i--){
-	if(i < labelNum+1){
+for(var i=-3; i<labelNum; i++){
+	if(i < labelNum-1){
 		var view = Ti.UI.createView({
 			// backgroundColor:'#336699',
 			borderColor:'#white',
 			backgroundColor:'#A0522D',
 			width:labelWidth,
 			height:70,
-			left: 135+labelWidth*(labelNum-i)
+			left: 135+labelWidth*i
 		});
 		if(i == 0)
 			view.backgroundColor = '#red';
@@ -329,11 +333,56 @@ for(var i=labelNum+1; i>-4; i--){
 		var view = Ti.UI.createView({
 			backgroundColor:'#gray',
 			width:135,
-			height:70, left:0
+			height:70,
+			left: 135+labelWidth*i
 		});
 		scrollView.add(view);
 	}
 }
+// for(var i=labelNum+1; i>-4; i--){
+	// if(i < labelNum+1){
+		// var view = Ti.UI.createView({
+			// // backgroundColor:'#336699',
+			// borderColor:'#white',
+			// backgroundColor:'#A0522D',
+			// width:labelWidth,
+			// height:70,
+			// left: 135+labelWidth*(labelNum-i)
+		// });
+		// if(i == 0)
+			// view.backgroundColor = '#red';
+		// scrollView.add(view);
+		// var wdayLabel = Ti.UI.createLabel({
+			// font:{fontSize:13},
+			// color:'#fff',
+			// width:'auto',
+			// textAlign:'center',
+			// height:'auto',
+			// top:10
+		// });
+		// var date = computeDate(Y, M, D, -i);
+		// var w = ["火","水","木","金","土","日","月"];
+		// wdayLabel.text = w[date.getDay()];
+		// view.add(wdayLabel);
+		// var dateLabel = Ti.UI.createLabel({
+			// text: date.getDate(),
+			// font:{fontSize:13},
+			// color:'#fff',
+			// width:'auto',
+			// textAlign:'center',
+			// height:'auto',
+			// top:40
+		// });
+		// view.add(dateLabel);
+	// } else {
+		// var view = Ti.UI.createView({
+			// backgroundColor:'#gray',
+			// width:135,
+			// height:70, left:0
+		// });
+		// scrollView.add(view);
+	// }
+// }
 win.add(scrollView);
 win.add(scrollValueLabel);
 win.add(allow);
