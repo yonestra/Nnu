@@ -29,9 +29,13 @@ if (records.length > 0) {
 	for (i = records.length-1; i >= 0; i--) {
 		// meats = meats + "[" + records[i].y_m_d +","+records[i].meat_val+"],";
 		// vegetables = vegetables + "[" + records[i].y_m_d +","+records[i].vegetable_val+"],";
+		var Y = String(records[i].y_m_d).slice(0,4);
+		var M = String(records[i].y_m_d).slice(4,6);
 		var D = String(records[i].y_m_d).slice(6,8);
-		carbs = carbs + "[" + D +","+records[i].carb_val+"],";
-		days = days + D + ",";
+		var time = new Date(Y, M-1, D);
+		Titanium.API.info("time:"+time);
+		carbs = carbs + "[" + time.getTime() +","+records[i].carb_val+"],";
+		days = days + time.getTime() + ",";
 	} 
 	carbs = carbs + "]"; days = days + "]";
 	// var graphWindow = Ti.UI.createWindow({
@@ -48,7 +52,7 @@ var webview = Ti.UI.createWebView({
 webview.addEventListener('load', function(){
 	webview.evalJS('carbs =' + carbs + ';');
 	webview.evalJS('days =' +  days + ';');
-	webview.evalJS('setting.xaxis.carbs = carbs;');
+	webview.evalJS('setting.xaxis.ticks = days;');
 	webview.evalJS('$.plot($("#graph"),[{data: carbs, color: 2}], setting);');
 });
 webview.url = "graph2.html";
