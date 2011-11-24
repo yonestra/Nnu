@@ -3,27 +3,41 @@
 Ti.include('record_db.js');
 
 var db = new RecordDB();
-// var records = db.findAll();
+var records = db.findAll();
+var meatArray = new Array();
+var vegetableArray = new Array();
+var carbArray = new Array();
+for (var i=0; i<records.length; i++){
+	meatArray[i] = records[i].meat_val;
+	vegetableArray[i] = records[i].vegetable_val;
+	carbArray[i] = records[i].carb_val;
+}
 
 var win = Ti.UI.currentWindow;
 var data = [];
 var tableView = Ti.UI.createTableView({
 	data:data,
-	editable: true
+	editable: true,
+    style:Titanium.UI.iPhone.TableViewStyle.GROUPED
 });
 var listview = Titanium.UI.createView({
     backgroundColor: "#f00",
     // opacity: 1,
-    top: 10,
-    left: 10,
-    width: 300,
-    height: 400
+    top: 0,
+    left: 0,
+    width: 320,
+    height: 370
     // layout: "vertical"
 });
 listview.add(tableView);
 
 var webview = Ti.UI.createWebView({
 	backgroundColor:"#fff"
+});
+win.addEventListener('load', function(){
+	webview.evalJS('meat = ' + meatArray +';');
+	webview.evalJS('vegetable = ' + vegetableArray +';');
+	webview.evalJS('carb = ' + carbArray +';');
 });
 webview.url = "graph.html";
 var graphview = Titanium.UI.createView({
@@ -39,7 +53,7 @@ graphview.hide();
 
 // NavBarに配置するインスタンス
 var tabbar = Titanium.UI.createTabbedBar({
-	width:200,
+	width:150,
 	backgroundColor:'#orange',
     labels: ['List', 'Graph'],
     style: Titanium.UI.iPhone.SystemButtonStyle.BAR,
@@ -121,9 +135,9 @@ function updateRecord (records) {
 			textAlign: 'right'
 		}
 		);
-		var Y = String(record.y_m_d).slice(0,3);
-		var M = String(record.y_m_d).slice(4,5);
-		var D = String(record.y_m_d).slice(6,7);
+		var Y = String(record.y_m_d).slice(0,4);
+		var M = String(record.y_m_d).slice(4,6);
+		var D = String(record.y_m_d).slice(6,8);
 		ymdLabel.text = Y+"/"+M+"/"+D;
 		row.add(ymdLabel);
 
@@ -131,7 +145,7 @@ function updateRecord (records) {
 	}
 	tableView.setData(currentData);
 }
-// updateRecord(records);
+updateRecord(records);
 
 function deleteCallback(index) {
 	db.deleteOne(records[index]);
@@ -143,34 +157,50 @@ tableView.addEventListener('delete', function(e){
 	deleteCallback(e.index);
 });
 
-//リスト項目追加ボタン
-var addButton = Ti.UI.createButton({
-	systemButton: Titanium.UI.iPhone.SystemButton.ADD
+//設定ボタン
+var settingButton = Ti.UI.createButton({
+	systemButton: Titanium.UI.iPhone.SystemButton.INFO_LIGHT
 });
-addButton.addEventListener(
+settingButton.addEventListener(
 'click', function () {
 	var recordWindow = Ti.UI.createWindow({
-		url: 'record_window.js',
-		record:{at: new Date()},
-		func: 'insert_row',
-		title:'Record',
+		url: 'setting.js',
+		title:'Setting',
     	barColor:'#orange',
 		backgroundColor:'#fff'
 	});
 	Ti.UI.currentTab.open(recordWindow);
 });
-win.rightNavButton = addButton;
+win.rightNavButton = settingButton;
 
-Ti.App.addEventListener('insert_row', function(record) {
-	Titanium.API.debug("insert_row");
-	insertCallback(record);
-});
+//リスト項目追加ボタン
+// var addButton = Ti.UI.createButton({
+	// systemButton: Titanium.UI.iPhone.SystemButton.ADD
+// });
+// addButton.addEventListener(
+// 'click', function () {
+	// var recordWindow = Ti.UI.createWindow({
+		// url: 'record_window.js',
+		// record:{at: new Date()},
+		// func: 'insert_row',
+		// title:'Record',
+    	// barColor:'#orange',
+		// backgroundColor:'#fff'
+	// });
+	// Ti.UI.currentTab.open(recordWindow);
+// });
+// win.rightNavButton = addButton;
 
-function insertCallback(record) {
-	db.insert(record);
-	records = db.findAll();
-	updateRecord(records);
-}
+// Ti.App.addEventListener('insert_row', function(record) {
+	// Titanium.API.debug("insert_row");
+	// insertCallback(record);
+// });
+// 
+// function insertCallback(record) {
+	// db.insert(record);
+	// records = db.findAll();
+	// updateRecord(records);
+// }
 
 //リスト項目更新
 tableView.addEventListener(
@@ -188,17 +218,17 @@ tableView.addEventListener(
 	Ti.UI.currentTab.open(recordWindow);
 });
 
-Ti.App.addEventListener('update_row', function(record) {
-	Titanium.API.debug("update_row");
-	updateCallback(record);
-});
-
-function updateCallback(record) {
-	// db.update(record)
-	db.updateByYMD(record)
-	records = db.findAll();
-	updateRecord(records);
-}
+// Ti.App.addEventListener('update_row', function(record) {
+	// Titanium.API.debug("update_row");
+	// updateCallback(record);
+// });
+// 
+// function updateCallback(record) {
+	// // db.update(record)
+	// db.updateByYMD(record)
+	// records = db.findAll();
+	// updateRecord(records);
+// }
 
 // Navbarの中央に配置
 Titanium.UI.currentWindow.setTitleControl(tabbar);

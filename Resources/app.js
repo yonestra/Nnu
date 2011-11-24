@@ -4,43 +4,57 @@ Titanium.UI.setBackgroundColor('#000');
 // create tab group
 var tabGroup = Titanium.UI.createTabGroup();
 
+//
+// create controls tab and root window
+//
+var win1 = Titanium.UI.createWindow({  
+    title:'Record',
+    barColor:'#orange',
+    backgroundColor:'#fff',
+    url:"record_window.js"
+});
+var tab1 = Titanium.UI.createTab({  
+    icon:'images/KS_nav_ui.png',
+    title:'Record',
+    window:win1
+});
 
 //
 // create base UI tab and root window
 //
-var win1 = Titanium.UI.createWindow({  
+var win2 = Titanium.UI.createWindow({  
     title:'List',
     barColor:'#orange',
     backgroundColor:'#fff',
     url:"table_view.js"
 });
-var tab1 = Titanium.UI.createTab({  
-    icon:'KS_nav_views.png',
+var tab2 = Titanium.UI.createTab({  
+    icon:'images/KS_nav_views.png',
     title:'List',
-    window:win1
+    window:win2
 });
 
 //
 // create controls tab and root window
 //
-var win3 = Titanium.UI.createWindow({  
-    title:'Setting',
-    barColor:'#orange',
-    backgroundColor:'#fff',
-    url:"setting.js"
-});
-var tab3 = Titanium.UI.createTab({  
-    icon:'KS_nav_ui.png',
-    title:'Setting',
-    window:win3
-});
+// var win3 = Titanium.UI.createWindow({  
+    // title:'Setting',
+    // barColor:'#orange',
+    // backgroundColor:'#fff',
+    // url:"setting.js"
+// });
+// var tab3 = Titanium.UI.createTab({  
+    // icon:'KS_nav_ui.png',
+    // title:'Setting',
+    // window:win3
+// });
 
 
 //
 //  add tabs
 //
 tabGroup.addTab(tab1);  
-tabGroup.addTab(tab3);
+tabGroup.addTab(tab2);
 
 
 // open tab group
