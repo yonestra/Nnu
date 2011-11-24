@@ -4,14 +4,6 @@ Ti.include('record_db.js');
 
 var db = new RecordDB();
 var records = db.findAll();
-var meatArray = new Array();
-var vegetableArray = new Array();
-var carbArray = new Array();
-for (var i=0; i<records.length; i++){
-	meatArray[i] = records[i].meat_val;
-	vegetableArray[i] = records[i].vegetable_val;
-	carbArray[i] = records[i].carb_val;
-}
 
 var win = Ti.UI.currentWindow;
 var data = [];
@@ -31,15 +23,35 @@ var listview = Titanium.UI.createView({
 });
 listview.add(tableView);
 
+var carbs = "[";
+var days = "[";
+if (records.length > 0) {
+	for (i = records.length-1; i >= 0; i--) {
+		// meats = meats + "[" + records[i].y_m_d +","+records[i].meat_val+"],";
+		// vegetables = vegetables + "[" + records[i].y_m_d +","+records[i].vegetable_val+"],";
+		var D = String(records[i].y_m_d).slice(6,8);
+		carbs = carbs + "[" + D +","+records[i].carb_val+"],";
+		days = days + D + ",";
+	} 
+	carbs = carbs + "]"; days = days + "]";
+	// var graphWindow = Ti.UI.createWindow({
+		// url: 'plot_window.js',
+		// carbs: carbs,
+		// days: days
+	// }
+	// );
+	// Ti.UI.currentTab.open(graphWindow);
+}
 var webview = Ti.UI.createWebView({
 	backgroundColor:"#fff"
 });
-win.addEventListener('load', function(){
-	webview.evalJS('meat = ' + meatArray +';');
-	webview.evalJS('vegetable = ' + vegetableArray +';');
-	webview.evalJS('carb = ' + carbArray +';');
+webview.addEventListener('load', function(){
+	webview.evalJS('carbs =' + carbs + ';');
+	webview.evalJS('days =' +  days + ';');
+	webview.evalJS('setting.xaxis.carbs = carbs;');
+	webview.evalJS('$.plot($("#graph"),[{data: carbs, color: 2}], setting);');
 });
-webview.url = "graph.html";
+webview.url = "graph2.html";
 var graphview = Titanium.UI.createView({
     backgroundColor: "#ff0",
     // opacity: 1,
