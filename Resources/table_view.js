@@ -22,7 +22,8 @@ var listview = Titanium.UI.createView({
     // layout: "vertical"
 });
 listview.add(tableView);
-
+var meats = "[";
+var vegetables = "[";
 var carbs = "[";
 var days = "[";
 if (records.length > 0) {
@@ -33,11 +34,17 @@ if (records.length > 0) {
 		var M = String(records[i].y_m_d).slice(4,6);
 		var D = String(records[i].y_m_d).slice(6,8);
 		var time = new Date(Y, M-1, D);
-		Titanium.API.info("time:"+time);
+		// Titanium.API.info("time:"+time);
+		meats = meats + "[" + time.getTime() +","+records[i].meat_val+"],";
+		vegetables = vegetables + "[" + time.getTime() +","+records[i].vegetable_val+"],";
 		carbs = carbs + "[" + time.getTime() +","+records[i].carb_val+"],";
+		// meats = meats + records[i].meat_val+",";
+		// vegetables = vegetables + records[i].vegetable_val+",";
+		// carbs = carbs + records[i].carb_val+",";
 		days = days + time.getTime() + ",";
 	} 
-	carbs = carbs + "]"; days = days + "]";
+	meats = meats + "]"; vegetables = vegetables + "]"; carbs = carbs + "]"; days = days + "]";
+	// Titanium.API.info(meats);
 	// var graphWindow = Ti.UI.createWindow({
 		// url: 'plot_window.js',
 		// carbs: carbs,
@@ -50,12 +57,18 @@ var webview = Ti.UI.createWebView({
 	backgroundColor:"#fff"
 });
 webview.addEventListener('load', function(){
+	webview.evalJS('meats =' + meats + ';');
+	webview.evalJS('vegetables =' + vegetables + ';');
 	webview.evalJS('carbs =' + carbs + ';');
 	webview.evalJS('days =' +  days + ';');
 	webview.evalJS('setting.xaxis.ticks = days;');
-	webview.evalJS('$.plot($("#graph"),[{data: carbs, color: 2}], setting);');
+	// webview.evalJS('$.plot($("#graph"),'
+		// +'[{label: "meat", data: meats, color: 1},'
+		// +'{label: "vegetable", data: vegetables, color: 2}, '
+		// +'{label: "carb", data: carbs, color: 3}], setting);');
+	webview.evalJS("plotWithOptions();");
 });
-webview.url = "graph2.html";
+webview.url = "graph.html";
 var graphview = Titanium.UI.createView({
     backgroundColor: "#ff0",
     // opacity: 1,

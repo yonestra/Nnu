@@ -1,120 +1,90 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-	<meta name="viewport" content="width=320, ">
-	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" type="text/css" href="./lib/jqplot/jquery.jqplot.min.css" />
-	<!--[if IE]><script language="javascript" type="text/javascript" src="http://localhost/work/dist/excanvas.min.js"></script><![endif]-->
-	<script language="javascript" type="text/javascript" src="./lib/jqplot/jquery.min.js"></script>
-	<script language="javascript" type="text/javascript" src="./lib/jqplot/jquery.jqplot.min.js"></script>
-	<script language="javascript" type="text/javascript" src="./lib/jqplot/plugins/jqplot.barRenderer.min.js"></script>
-    <script language="javascript" type="text/javascript" src="./lib/jqplot/plugins/jqplot.categoryAxisRenderer.min.js"></script>
-    <script language="javascript" type="text/javascript" src="./lib/jqplot/plugins/jqplot.cursor.min.js"></script>
-</head>
-<body>
-    <p style="font-size : 16pt; padding : 10px 5px; text-align : center; color : black;">食事推移</p>
-    <div id="record" style="width : 300px; height : 500px;"></div>
-    <!--div id="jq" style="width : 300px; height : 240px;"></div-->
-    <script type="text/javascript">
-    // var meat;
-    // var vegetable;
-    // var carb;
-    $(document).ready(function() {
-		var meat = [2, 6, 7, 10, 2, 6, 7, 10];
-		var vegetable = [7, 5, 3, 4, 7, 5, 3, 4];
-		var carb = [14, 9, 3, 8, 14, 9, 3, 8];
-		plot3 = $.jqplot('record', [meat, vegetable, carb], {
-			// Tell the plot to stack the bars.
-			stackSeries: true,
-			captureRightClick: true,
-			seriesDefaults:{
-				renderer:$.jqplot.BarRenderer,
-				rendererOptions: {
-					// Put a 30 pixel margin between bars.
-					barMargin: 30,
-					barDirection: 'horizontal',
-					// Highlight bars when mouse button pressed.
-					// Disables default highlighting on mouse over.
-					highlightMouseDown: true
-				},
-				pointLabels: {show: true}
-			},
-			axes: {
-				xaxis: {
-					padMin: 0
-					// renderer: $.jqplot.CategoryAxisRenderer
-				},
-				yaxis: {
-					// Don't pad out the bottom of the data range.  By default,
-					// axes scaled as if data extended 10% above and below the
-					// actual range to prevent data points right on grid boundaries.
-					// Don't want to do that here.
-					renderer: $.jqplot.CategoryAxisRenderer,
-					label: '日付'
-					// padMin: 0
-				}
-			},
-			legend: {
-				show: true,
-				location: 'ne'
-				// placement: 'nw'
-			} 
-		});
-		// Bind a listener to the "jqplotDataClick" event.  Here, simply change
-		// the text of the info3 element to show what series and ponit were
-		// clicked along with the data for that point.
-		$('#record').bind('jqplotDataClick', 
-		function (ev, seriesIndex, pointIndex, data) {
-			$('#info3').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);
-		}); 
+ <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Flot Examples</title>
+    <link href="layout.css" rel="stylesheet" type="text/css">
+    <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../excanvas.min.js"></script><![endif]-->
+    <script language="javascript" type="text/javascript" src="lib/flot/jquery.js"></script>
+    <script language="javascript" type="text/javascript" src="lib/flot/jquery.flot.js"></script>
+    <script language="javascript" type="text/javascript" src="lib/flot/jquery.flot.stack.js"></script>
+ </head>
+    <body>
 
-	// Ti.App.fireEvent('load',function(data){
-		// // alert("test");
-		// // alert(data.kcalArray);
-		// var data = [ 1000, 1200, 2800, 2100, 3500 ];
-		// // $.jqplot('jq', [ data.kcalArray ], {
-    	// $.jqplot('jq', [ data ], {
-			// legend: {
-				// // 凡例を北東（右上）に表示
-				// show: true,
-				// location: 'ne'
-			// },
-			// series: [
-				// {
-					// // 系列1を1番目の縦軸に棒グラフで表示
-					// yaxis: 'yaxis',
-					// label: 'Meat',
-					// renderer: $.jqplot.BarRenderer
-				// }
-			// ],
-			// axes: {
-				// xaxis: {
-					// // tick_dataの値を横軸のラベルに表示
-					// ticks: data.dateArray,
-					// renderer: $.jqplot.CategoryAxisRenderer
-				// },
-				// yaxis: {
-					// // 縦軸1の目盛を0～100の20刻みにする
-					// min: 0,
-					// max: 5000,
-					// tickInterval: 1000,
-					// numberTicks: 6
-				// },
-				// y2axis: {
-					// // 縦軸2の目盛を0～10の2刻みにする
-					// min: 0,
-					// max: 10,
-					// tickInterval: 2,
-					// numberTicks: 6
-				// }
-			// },
-			// cursor: {
-				// // カーソル位置を北西（左上）に表示
-				// tooltipLocation: 'nw'
-			// }
-		// });
-		
+    <div id="graph" style="width:1000px;height:240px;"></div>
+    
+    <p class="stackControls">
+    <input type="button" value="With stacking">
+    <input type="button" value="Without stacking">
+    </p>
+    
+    <p class="graphControls">
+	<input type="button" value="Bars">
+	<input type="button" value="Lines">
+	<input type="button" value="Lines with steps">
+    </p>
+
+	<script type="text/javascript">
+	var meats;
+	var vegetables;
+	var carbs;
+	var days;
+	var stack = 0, lines = true, bars = false, steps = false;
+	var setting = {
+	        series: {
+	        	stack: stack,
+	            lines: {show:lines, fill:true, steps:steps},
+	            bars: {show:bars, barWidth:10}
+	            // points: {show:true}
+	        },
+	        xaxis: {
+	            mode:"time",
+	            timeformat:"%m/%d",
+	            tickSize: [30,"day"]
+	        },
+	        yaxis: {
+	            ticks: 10,
+	            min: 0,
+	        },
+	        grid: {
+	            backgroundColor: { colors: ["#fff","#eee"] },
+	        }
+	};
+	
+	function plotWithOptions(){
+		$.plot(
+			$("#graph"),
+			[
+				{label: "meat", data: meats, color: 1},
+				{label: "vegetable", data: vegetables, color: 2},
+				{label: "carb", data: carbs, color: 3}
+			], 
+			setting
+		);
+	}
+	
+	$(".stackControls input").click(function (e) {
+        e.preventDefault();
+        stack = $(this).val() == "With stacking" ? true : null;
+        setting.series.stack = stack;
+        plotWithOptions();
     });
-    </script>
-</body>
+    $(".graphControls input").click(function (e) {
+        e.preventDefault();
+        bars = $(this).val().indexOf("Bars") != -1;
+        lines = $(this).val().indexOf("Lines") != -1;
+        steps = $(this).val().indexOf("steps") != -1;
+        setting.series.lines.show = lines;
+        setting.series.lines.steps = steps;
+        setting.series.bars.show = bars;
+        plotWithOptions();
+    });
+</script>
+
+ </body>
+</html>
+
+	</script>
+
+ </body>
 </html>
