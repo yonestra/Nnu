@@ -2,6 +2,8 @@
 
 //DB操作のメソッドをここに書く
 var RecordDB = function() {
+	this.startDate = new Date(2011,10,22);
+	
 	this.dbName = 'records';
 	
 	this.open = function () {

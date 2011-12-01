@@ -10,9 +10,6 @@ if(String(D).length == 1) D = "0"+D;
 var y_m_d = parseInt(Y+""+M+""+D);
 var y_m_d_old = y_m_d;
 
-var labelNum = 30;
-var labelWidth = 50;
-
 var monthLabel = Titanium.UI.createLabel({
 	color:'#black',
 	font:{
@@ -248,6 +245,13 @@ function computeDate(year, month, day, addDays) {
     dt.setTime(targetSec);
     return dt;
 }
+function compareDate(year1, month1, day1, year2, month2, day2) {
+    var dt1 = new Date(year1, month1 - 1, day1);
+    var dt2 = new Date(year2, month2 - 1, day2);
+    var diff = dt1 - dt2;
+    var diffDay = diff / 86400000;//1日は86400000ミリ秒
+    return diffDay;
+}
 
 //SDK 1.8に期待！
 // scrollView.addEventListener('dragend', function(){
@@ -282,6 +286,19 @@ Ti.include('record_db.js');
 var db = new RecordDB();
 var record = db.findOneByYMD(y_m_d);
 getData(record);
+
+var startDate = db.startDate;
+var sY = startDate.getYear()+1900;
+var sM = startDate.getMonth();
+var sD = startDate.getDate();
+var diffDate = compareDate(Y, M, D, sY, sM, sD);
+Titanium.API.info("diffDate:"+diffDate);
+Titanium.API.info("sYMD:"+sY+"-"+sM+"-"+sD);
+Titanium.API.info("start:"+computeDate(Y, M, D, -diffDate));
+
+// var labelNum = 30;
+var labelNum = diffDate+2;
+var labelWidth = 50;
 
 scrollView.addEventListener('scroll', function(e)
 {
