@@ -176,6 +176,25 @@ saveButton.addEventListener(
 	record.updated_at.setHours(12); //日付がなぜかズレるのを防止c, record);
 	Ti.App.fireEvent(win.func, record);
 	// if(win.func == "update_row") win.close();
+	
+	if ( Ti.Facebook.loggedIn ) {
+		// if ( Ti.Facebook.loggedIn && win.func == "insert_row") {
+		var message = "meat:"+record.meat_val
+						+", vegetable:"+record.vegetable_val
+						+", carb:"+record.carb_val;
+        Ti.Facebook.requestWithGraphPath(
+	        'me/feed',
+	        {
+	             message: message
+	        },
+	        "POST",
+	        function(e) {
+	            if (e.success) {
+	                alert("Success" + e.result);
+	            }
+	        }
+	    );
+    }
 });
 
 Ti.App.addEventListener('insert_row', function(record) {
