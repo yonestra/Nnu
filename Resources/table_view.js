@@ -274,3 +274,8 @@ tabbar.addEventListener('click', function(e)
 		graphview.show();
 	}
 });
+
+//webviewと連携
+Titanium.App.addEventListener("webAction", function(e){
+	alert(e.text);
+});
