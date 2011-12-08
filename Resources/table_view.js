@@ -26,7 +26,13 @@ var meats = "[";
 var vegetables = "[";
 var carbs = "[";
 var days = "[";
+var meat_mean;
+var vegetable_mean;
+var carb_mean;
 if (records.length > 0) {
+	var meat_sum = 0;
+	var vegetable_sum = 0;
+	var carb_sum = 0;
 	for (i = records.length-1; i >= 0; i--) {
 		// meats = meats + "[" + records[i].y_m_d +","+records[i].meat_val+"],";
 		// vegetables = vegetables + "[" + records[i].y_m_d +","+records[i].vegetable_val+"],";
@@ -42,8 +48,15 @@ if (records.length > 0) {
 		// vegetables = vegetables + records[i].vegetable_val+",";
 		// carbs = carbs + records[i].carb_val+",";
 		days = days + time.getTime() + ",";
+		
+		meat_sum += records[i].meat_val;
+		vegetable_sum += records[i].vegetable_val;
+		carb_sum +=  records[i].carb_val;
 	} 
 	meats = meats + "]"; vegetables = vegetables + "]"; carbs = carbs + "]"; days = days + "]";
+	meat_mean = meat_sum / records.length;
+	vegetable_mean = vegetable_sum / records.length;
+	carb_mean = carb_sum / records.length;
 	// Titanium.API.info(meats);
 	// var graphWindow = Ti.UI.createWindow({
 		// url: 'plot_window.js',
@@ -54,6 +67,8 @@ if (records.length > 0) {
 	// Ti.UI.currentTab.open(graphWindow);
 }
 var webview = Ti.UI.createWebView({
+	top:0,
+	height:300,
 	backgroundColor:"#fff"
 });
 webview.addEventListener('load', function(){
@@ -62,11 +77,12 @@ webview.addEventListener('load', function(){
 	webview.evalJS('carbs =' + carbs + ';');
 	webview.evalJS('days =' +  days + ';');
 	webview.evalJS('setting.xaxis.ticks = days;');
-	// webview.evalJS('$.plot($("#graph"),'
-		// +'[{label: "meat", data: meats, color: 1},'
-		// +'{label: "vegetable", data: vegetables, color: 2}, '
-		// +'{label: "carb", data: carbs, color: 3}], setting);');
 	webview.evalJS("plotWithOptions();");
+	
+	webview.evalJS('meat_mean =' + meat_mean + ';');
+	webview.evalJS('vegetable_mean =' + vegetable_mean + ';');
+	webview.evalJS('carb_mean =' + carb_mean + ';');
+	webview.evalJS("plotPieWithOptions();");
 });
 webview.url = "graph.html";
 var graphview = Titanium.UI.createView({
@@ -276,6 +292,32 @@ tabbar.addEventListener('click', function(e)
 });
 
 //webviewと連携
-Titanium.App.addEventListener("webAction", function(e){
-	alert(e.text);
+// Titanium.App.addEventListener("webAction", function(e){
+	// alert(e.text);
+// });
+
+Titanium.App.addEventListener("postImage", function(e){
+	// var f = e.image.read();
+	var file = Titanium.Filesystem.getFile(Titanium.Filesystem.resourcesDirectory, "images/carb.png");
+	var blob = file.read();
+	Ti.API.info("file:" + file);
+	Ti.API.info("blob:" + blob);
+    if ( Ti.Facebook.loggedIn ) {
+    	Ti.API.info("you logined already!");
+	    Ti.Facebook.requestWithGraphPath(
+	        'me/photos',
+	        {
+	             message: "image post test",
+	             picture: blob
+	        },
+	        "POST",
+	        function(e) {
+	            if (e.success) {
+	                alert("Success" + e.result);
+	            }
+	        }
+	    );
+	} else {
+		alert("not login yet!");
+	}
 });
