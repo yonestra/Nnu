@@ -176,8 +176,7 @@ Titanium.UI.currentWindow.showNavBar();
 var settingButton = Ti.UI.createButton({
 	systemButton: Titanium.UI.iPhone.SystemButton.INFO_LIGHT
 });
-settingButton.addEventListener(
-'click', function () {
+settingButton.addEventListener('click', function () {
 	var recordWindow = Ti.UI.createWindow({
 		url: 'setting.js',
 		title:'Setting',
