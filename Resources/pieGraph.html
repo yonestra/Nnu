@@ -8,63 +8,13 @@
     <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../excanvas.min.js"></script><![endif]-->
     <script language="javascript" type="text/javascript" src="lib/flot/jquery.js"></script>
     <script language="javascript" type="text/javascript" src="lib/flot/jquery.flot.js"></script>
-    <script language="javascript" type="text/javascript" src="lib/flot/jquery.flot.stack.js"></script>
     <script language="javascript" type="text/javascript" src="lib/flot/jquery.flot.pie.js"></script>
  </head>
     <body>
-
-    <div id="graph" style="width:1000px;height:240px;"></div>
-    
-    <canvas id="postCanvas" height="10" width="10" style="background: #000080;"></canvas>
     
     <div id="pieGraph" style="width:240px;height:240px;"></div>
 
 	<script type="text/javascript">
-	var meats;
-	var vegetables;
-	var carbs;
-	var days;
-	var stack = 0, lines = true, bars = false, steps = false;
-	var setting = {
-	        series: {
-	        	stack: stack,
-	            lines: {show:lines, fill:true, steps:steps},
-	            bars: {show:bars, barWidth:10}
-	            // points: {show:true}
-	        },
-	        xaxis: {
-	            mode:"time",
-	            timeformat:"%m/%d",
-	            tickSize: [30,"day"]
-	        },
-	        yaxis: {
-	            ticks: 10,
-	            min: 0,
-	        },
-	        grid: {
-	            backgroundColor: { colors: ["#fff","#eee"] },
-	        }
-	};
-	
-	function plotWithOptions(){
-		$.plot(
-			$("#graph"),
-			[
-				{label: "meat", data: meats, color: 1},
-				{label: "vegetable", data: vegetables, color: 2},
-				{label: "carb", data: carbs, color: 3}
-			], 
-			setting
-		);
-	}
-	
-    // var postCanvas = document.getElementById('postCanvas');
-    // $(".postImage input").click(function (e) {
-        // e.preventDefault();
-        // var image = postCanvas.toDataURL();
-        // Titanium.App.fireEvent( "postImage", { image: image } );
-    // });
-    
     var meat_mean;
 	var vegetable_mean;
 	var carb_mean;
@@ -99,7 +49,7 @@
 			pieSetting
 		);
 	}
-</script>
+	</script>
 
  </body>
 </html>

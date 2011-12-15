@@ -79,12 +79,24 @@ webview.addEventListener('load', function(){
 	webview.evalJS('setting.xaxis.ticks = days;');
 	webview.evalJS("plotWithOptions();");
 	
-	webview.evalJS('meat_mean =' + meat_mean + ';');
-	webview.evalJS('vegetable_mean =' + vegetable_mean + ';');
-	webview.evalJS('carb_mean =' + carb_mean + ';');
-	webview.evalJS("plotPieWithOptions();");
+	// webview.evalJS('meat_mean =' + meat_mean + ';');
+	// webview.evalJS('vegetable_mean =' + vegetable_mean + ';');
+	// webview.evalJS('carb_mean =' + carb_mean + ';');
+	// webview.evalJS("plotPieWithOptions();");
 });
 webview.url = "graph.html";
+var webview2 = Ti.UI.createWebView({
+	top:0,
+	height:370,
+	backgroundColor:"#fff"
+});
+webview2.addEventListener('load', function(){
+	webview2.evalJS('meat_mean =' + meat_mean + ';');
+	webview2.evalJS('vegetable_mean =' + vegetable_mean + ';');
+	webview2.evalJS('carb_mean =' + carb_mean + ';');
+	webview2.evalJS("plotPieWithOptions();");
+});
+webview2.url = "pieGraph.html";
 var graphview = Titanium.UI.createView({
     backgroundColor: "#ff0",
     // opacity: 1,
@@ -93,7 +105,68 @@ var graphview = Titanium.UI.createView({
     width: 320
     // layout: "vertical"
 });
-graphview.add(webview);
+var imagePostButton = Titanium.UI.createButton({
+	top:315, left:10, height:25, width:70,
+	title:"post"
+});
+imagePostButton.addEventListener('click', function(){
+	webview.evalJS(
+        'var image = postCanvas.toDataURL();'
+        +'Titanium.App.fireEvent( "postImage", { image: image } );'
+	);
+});
+var stackButton = Titanium.UI.createButton({
+	top:315, left:90, height:25, width:70,
+	title:"stack"
+});
+var stack_toggle = true;
+stackButton.addEventListener("click", function(){
+	if(stack_toggle){
+		stack_toggle = null;
+	} else {
+		stack_toggle = true;
+	}
+    webview.evalJS('stack = ' + stack_toggle + ';');
+    webview.evalJS('setting.series.stack = stack;');
+    webview.evalJS('plotWithOptions();');
+});
+var graphTypeButton = Titanium.UI.createButton({
+	top:315, left:170, height:25, width:70,
+	title:"type"
+});
+var typeNum = 1;
+graphTypeButton.addEventListener("click", function(){
+	typeNum++;
+	if(typeNum > 3) typeNum = 1;
+	var lines, steps, bars;
+	switch(typeNum){
+		case 1:
+			lines = true;
+			steps = false;
+			bars = false;
+			break;
+		case 2:
+			lines = true;
+			steps = true;
+			bars = false;
+			break;
+		case 3:
+			lines = false;
+			steps = false;
+			bars = true;
+			break;
+	}
+	webview.evalJS(
+		'setting.series.lines.show = ' + lines + ';'
+	    +'setting.series.lines.steps = ' + steps + ';'
+	    +'setting.series.bars.show = ' + bars + ';'
+	);
+	webview.evalJS('plotWithOptions();');
+});
+graphview.add(imagePostButton);
+graphview.add(stackButton);
+graphview.add(graphTypeButton);
+graphview.add(webview2);
 graphview.hide();
 
 // NavBarに配置するインスタンス
