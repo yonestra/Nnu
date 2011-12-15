@@ -6,22 +6,7 @@ var db = new RecordDB();
 var records = db.findAll();
 
 var win = Ti.UI.currentWindow;
-var data = [];
-var tableView = Ti.UI.createTableView({
-	data:data,
-	editable: true,
-    style:Titanium.UI.iPhone.TableViewStyle.GROUPED
-});
-var listview = Titanium.UI.createView({
-    backgroundColor: "#f00",
-    // opacity: 1,
-    top: 0,
-    left: 0,
-    width: 320,
-    height: 370
-    // layout: "vertical"
-});
-listview.add(tableView);
+
 var meats = "[";
 var vegetables = "[";
 var carbs = "[";
@@ -34,19 +19,13 @@ if (records.length > 0) {
 	var vegetable_sum = 0;
 	var carb_sum = 0;
 	for (i = records.length-1; i >= 0; i--) {
-		// meats = meats + "[" + records[i].y_m_d +","+records[i].meat_val+"],";
-		// vegetables = vegetables + "[" + records[i].y_m_d +","+records[i].vegetable_val+"],";
 		var Y = String(records[i].y_m_d).slice(0,4);
 		var M = String(records[i].y_m_d).slice(4,6);
 		var D = String(records[i].y_m_d).slice(6,8);
 		var time = new Date(Y, M-1, D);
-		// Titanium.API.info("time:"+time);
 		meats = meats + "[" + time.getTime() +","+records[i].meat_val+"],";
 		vegetables = vegetables + "[" + time.getTime() +","+records[i].vegetable_val+"],";
 		carbs = carbs + "[" + time.getTime() +","+records[i].carb_val+"],";
-		// meats = meats + records[i].meat_val+",";
-		// vegetables = vegetables + records[i].vegetable_val+",";
-		// carbs = carbs + records[i].carb_val+",";
 		days = days + time.getTime() + ",";
 		
 		meat_sum += records[i].meat_val;
@@ -66,10 +45,13 @@ if (records.length > 0) {
 	// );
 	// Ti.UI.currentTab.open(graphWindow);
 }
+
+//横グラフUI
 var webview = Ti.UI.createWebView({
 	top:0,
 	height:300,
-	backgroundColor:"#fff"
+	backgroundColor:"#fff",
+	url:"graph.html"
 });
 webview.addEventListener('load', function(){
 	webview.evalJS('meats =' + meats + ';');
@@ -77,26 +59,8 @@ webview.addEventListener('load', function(){
 	webview.evalJS('carbs =' + carbs + ';');
 	webview.evalJS('days =' +  days + ';');
 	webview.evalJS('setting.xaxis.ticks = days;');
-	webview.evalJS("plotWithOptions();");
-	
-	// webview.evalJS('meat_mean =' + meat_mean + ';');
-	// webview.evalJS('vegetable_mean =' + vegetable_mean + ';');
-	// webview.evalJS('carb_mean =' + carb_mean + ';');
-	// webview.evalJS("plotPieWithOptions();");
+	webview.evalJS('plotWithOptions();');//このタイミングではなぜか実行できない
 });
-webview.url = "graph.html";
-var webview2 = Ti.UI.createWebView({
-	top:0,
-	height:370,
-	backgroundColor:"#fff"
-});
-webview2.addEventListener('load', function(){
-	webview2.evalJS('meat_mean =' + meat_mean + ';');
-	webview2.evalJS('vegetable_mean =' + vegetable_mean + ';');
-	webview2.evalJS('carb_mean =' + carb_mean + ';');
-	webview2.evalJS("plotPieWithOptions();");
-});
-webview2.url = "pieGraph.html";
 var graphview = Titanium.UI.createView({
     backgroundColor: "#ff0",
     // opacity: 1,
@@ -105,6 +69,7 @@ var graphview = Titanium.UI.createView({
     width: 320
     // layout: "vertical"
 });
+
 var imagePostButton = Titanium.UI.createButton({
 	top:315, left:10, height:25, width:70,
 	title:"post"
@@ -166,8 +131,35 @@ graphTypeButton.addEventListener("click", function(){
 graphview.add(imagePostButton);
 graphview.add(stackButton);
 graphview.add(graphTypeButton);
-graphview.add(webview2);
+graphview.add(webview);
 graphview.hide();
+
+
+//円グラフUI
+// var pieview = Titanium.UI.createView({
+    // backgroundColor: "#f00",
+    // // opacity: 1,
+    // top: 0,
+    // left: 0,
+    // width: 320,
+    // height: 370
+    // // layout: "vertical"
+// });
+var pie_webview = Ti.UI.createWebView({
+	top:0,
+	height:370,
+	backgroundColor:"#fff"
+});
+pie_webview.addEventListener('load', function(){
+	pie_webview.evalJS('meat_mean =' + meat_mean + ';');
+	pie_webview.evalJS('vegetable_mean =' + vegetable_mean + ';');
+	pie_webview.evalJS('carb_mean =' + carb_mean + ';');
+	pie_webview.evalJS("plotPieWithOptions();");
+});
+pie_webview.url = "pieGraph.html";
+
+// pieview.add(pie_webview);
+
 
 // NavBarに配置するインスタンス
 var tabbar = Titanium.UI.createTabbedBar({
@@ -179,101 +171,6 @@ var tabbar = Titanium.UI.createTabbedBar({
 });
 // 現在のwindowから非表示→表示
 Titanium.UI.currentWindow.showNavBar();
-
-win.add(listview);
-win.add(graphview);
-
-function updateRecord (records) {
-	var data = currentData = [];
-	for (var i=0;i<records.length;i++) {
-		var record = records[i];
-		// Ti.API.info("meat_val:" + record.meat_val);
-		var row = Ti.UI.createTableViewRow({
-			height: 'auto',
-			layout: 'vertical',
-			hasChild: true,
-		});
-		var meatLabel = Ti.UI.createLabel({
-			width: 60,
-			height: 'auto',
-			left: 60,
-			top: 5,
-			fontSize: 8,
-			fontWeight: 'bold',
-			textAlign: 'left',
-			color: '#2b4771'
-		}
-		);
-		if(record.meat_val != null){
-			meatLabel.text = "肉：" + record.meat_val;
-		} else {
-			meatLabel.text = "肉：" + 0;
-		}
-		row.add(meatLabel);
-		var vegetableLabel = Ti.UI.createLabel({
-			width: 60,
-			height: 'auto',
-			left: 130,
-			top: -meatLabel.height,
-			fontSize: 8,
-			fontWeight: 'bold',
-			textAlign: 'left',
-			color: '#2b4771'
-		}
-		);
-		if(record.vegetable_val != null){
-			vegetableLabel.text = "菜:"+record.vegetable_val;
-		} else {
-			vegetableLabel.text = "菜:"+0;
-		}
-		row.add(vegetableLabel);
-		var carbLabel = Ti.UI.createLabel({
-			width: 60,
-			height: 'auto',
-			left: 200,
-			top: -meatLabel.height,
-			fontSize: 8,
-			fontWeight: 'bold',
-			textAlign: 'left',
-			color: '#2b4771'
-		}
-		);
-		if(record.carb_val != null){
-			carbLabel.text = "菜:"+record.carb_val;
-		} else {
-			carbLabel.text = "菜:"+0;
-		}
-		row.add(carbLabel);
-		var ymdLabel = Ti.UI.createLabel({
-			width: 290,
-			height: 'auto',
-			left: 5,
-			top: 5,
-			fontSize: 6,
-			textAlign: 'right'
-		}
-		);
-		var Y = String(record.y_m_d).slice(0,4);
-		var M = String(record.y_m_d).slice(4,6);
-		var D = String(record.y_m_d).slice(6,8);
-		ymdLabel.text = Y+"/"+M+"/"+D;
-		row.add(ymdLabel);
-
-		currentData.push(row);
-	}
-	tableView.setData(currentData);
-}
-updateRecord(records);
-
-function deleteCallback(index) {
-	db.deleteOne(records[index]);
-	records.db.findAll();
-	updateRecord(records);
-}
-
-tableView.addEventListener('delete', function(e){
-	deleteCallback(e.index);
-});
 
 //設定ボタン
 var settingButton = Ti.UI.createButton({
@@ -290,51 +187,6 @@ settingButton.addEventListener(
 	Ti.UI.currentTab.open(recordWindow);
 });
 win.rightNavButton = settingButton;
-
-//リスト項目追加ボタン
-// var addButton = Ti.UI.createButton({
-	// systemButton: Titanium.UI.iPhone.SystemButton.ADD
-// });
-// addButton.addEventListener(
-// 'click', function () {
-	// var recordWindow = Ti.UI.createWindow({
-		// url: 'record_window.js',
-		// record:{at: new Date()},
-		// func: 'insert_row',
-		// title:'Record',
-    	// barColor:'#orange',
-		// backgroundColor:'#fff'
-	// });
-	// Ti.UI.currentTab.open(recordWindow);
-// });
-// win.rightNavButton = addButton;
-
-// Ti.App.addEventListener('insert_row', function(record) {
-	// Titanium.API.debug("insert_row");
-	// insertCallback(record);
-// });
-// 
-// function insertCallback(record) {
-	// db.insert(record);
-	// records = db.findAll();
-	// updateRecord(records);
-// }
-
-//リスト項目更新
-tableView.addEventListener(
-'click', function(e) {
-	var record = records[e.index];
-	record.index = e.index;
-	var recordWindow = Ti.UI.createWindow({
-		url: 'record_window.js',
-		record: record,
-		func: 'update_row',
-		title:'Record',
-    	barColor:'#orange',
-		backgroundColor:'#fff'
-	});
-	Ti.UI.currentTab.open(recordWindow);
-});
 
 // Ti.App.addEventListener('update_row', function(record) {
 	// Titanium.API.debug("update_row");
@@ -354,13 +206,14 @@ tabbar.addEventListener('click', function(e)
 {
 	if (this.index == 0)
 	{
-		listview.show();
+		pie_webview.show();
 		graphview.hide();
 	}
 	else if (this.index == 1)
 	{
-		listview.hide();
+		pie_webview.hide();
 		graphview.show();
+		webview.evalJS('plotWithOptions();');
 	}
 });
 
@@ -394,3 +247,6 @@ Titanium.App.addEventListener("postImage", function(e){
 		alert("not login yet!");
 	}
 });
+
+win.add(pie_webview);
+win.add(graphview);

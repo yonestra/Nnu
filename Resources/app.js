@@ -23,31 +23,31 @@ var tab1 = Titanium.UI.createTab({
 // create base UI tab and root window
 //
 var win2 = Titanium.UI.createWindow({  
-    title:'List',
+    title:'Calendar',
     barColor:'#orange',
     backgroundColor:'#fff',
-    url:"table_view.js"
+    url:"calendar_view.js"
 });
 var tab2 = Titanium.UI.createTab({  
     icon:'images/KS_nav_views.png',
-    title:'List',
+    title:'Calendar',
     window:win2
 });
 
 //
-// create controls tab and root window
+// create base UI tab and root window
 //
-// var win3 = Titanium.UI.createWindow({  
-    // title:'Setting',
-    // barColor:'#orange',
-    // backgroundColor:'#fff',
-    // url:"setting.js"
-// });
-// var tab3 = Titanium.UI.createTab({  
-    // icon:'KS_nav_ui.png',
-    // title:'Setting',
-    // window:win3
-// });
+var win3 = Titanium.UI.createWindow({  
+    title:'Data',
+    barColor:'#orange',
+    backgroundColor:'#fff',
+    url:"table_view.js"
+});
+var tab3 = Titanium.UI.createTab({  
+    icon:'images/KS_nav_views.png',
+    title:'Data',
+    window:win3
+});
 
 
 //
